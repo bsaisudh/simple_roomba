@@ -56,5 +56,4 @@ int main(int argc, char **argv) {
   // Let ROS take control
   ros::spin();
   return 0;
-
 }

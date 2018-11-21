@@ -47,12 +47,6 @@ RoombaMove::RoombaMove() {
   minDist = 0;
 }
 
-void RoombaMove::nodeinit(int argc, char **argv) {
-  //Initialize ros node
-  ros::init(argc, argv, "simple_roomba");
-  ROS_INFO_STREAM("Created Node node name : simple_roomba");
-}
-
 void RoombaMove::initScanSubscriber() {
   // Initialize subscriber to lazer scan data
   scanSubscriber = n.subscribe("scan", 100, &RoombaMove::scanCallBack, this);
@@ -74,7 +68,8 @@ void RoombaMove::scanCallBack(
   // Loop through range values and find the nearest obstacle distance
   for (auto i : scanData->ranges) {
     if (i < minDist && !std::isnan(i)) {
-      // Assign minimum distance if the encountered value is less than the previous value
+      // Assign minimum distance if the encountered
+      // value is less than the previous value
       minDist = i;
     }
   }

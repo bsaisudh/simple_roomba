@@ -63,13 +63,6 @@ class RoombaMove {
    */
   RoombaMove();
   /**
-   * @brief Intitialise ros node
-   * @param argc Number of command line arguments
-   * @param argv Pointer to command line arguments
-   * @return Status of execution
-   */
-  void nodeinit(int argc, char **argv);
-  /**
    * @brief Initialize subscriber
    * @param None
    * @return None
