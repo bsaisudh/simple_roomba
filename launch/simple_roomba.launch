@@ -1,5 +1,5 @@
 <launch>
-  <arg name="bagrecord" default = "true"/>
+  <arg name="bagrecord" default = "0"/>
   <include
     file = "$(find turtlebot_gazebo)/launch/turtlebot_world.launch">
   </include>
@@ -11,7 +11,7 @@
   <node pkg="rosbag" 
 	type="record" 
 	name="simple_roomba" 
-	args="record -o /$(find simple_roomba)/rosbag/rosbag.bag -a -x /camera/(.*) --duration=30" 
+	args="record -o /$(find simple_roomba)/rosbag/rosbag.bag -a -x /camera/(.*) --duration= 30" 
 	if="$(arg bagrecord)">
   </node>
 
