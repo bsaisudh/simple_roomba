@@ -37,21 +37,68 @@
 #include "geometry_msgs/Twist.h"
 #include "sensor_msgs/LaserScan.h"
 
+/**
+ * @brief Roomba navigator class that drives the robot by avoiding obstacles
+ */
+
 class RoombaMove {
  private:
+  // Node handle
   ros::NodeHandle n;
+  // Subscriber for scan
   ros::Subscriber scanSubscriber;
+  // Publisher to twist
   ros::Publisher twistpublisher;
+  // Obstacle boolean that is true if there is obstacle
   bool obstacle;
+  // Distance of nearest obstacle
   float minDist;
+  // Twist message
   geometry_msgs::Twist twist;
  public:
+  /**
+   * @brief Roomba move constructor
+   * @param None
+   * @return None
+   */
   RoombaMove();
+  /**
+   * @brief Intitialise ros node
+   * @param argc Number of command line arguments
+   * @param argv Pointer to command line arguments
+   * @return Status of execution
+   */
   void nodeinit(int argc, char **argv);
+  /**
+   * @brief Initialize subscriber
+   * @param None
+   * @return None
+   */
   void initScanSubscriber();
+  /**
+   * @brief Initialize publisher
+   * @param None
+   * @return None
+   */
   void initTwistpublisher();
+  /**
+   * @brief Call back function for subscriber. It finds if there is
+   * an obstacle in the path and correspondingly alters the path
+   * @param scanData Pointer to message object
+   * @return None
+   */
   void scanCallBack(const sensor_msgs::LaserScan::ConstPtr &scanData);
+  /**
+   * @brief Checks if obstacle is present and moves the robot by publishing the values
+   * @param scanData Pointer to message object
+   * @return None
+   */
   void botMove(bool obstacle);
+  /**
+   * @brief Roomba move destructor
+   * @param None
+   * @return None
+   */
   virtual ~RoombaMove();
 };
 

@@ -41,21 +41,26 @@
 #include "../include/RoombaMove.h"
 
 RoombaMove::RoombaMove() {
+  // Initialize obstacle detection
   obstacle = false;
+  // Initialize distance of nearest obstacle
   minDist = 0;
 }
 
 void RoombaMove::nodeinit(int argc, char **argv) {
+  //Initialize ros node
   ros::init(argc, argv, "simple_roomba");
   ROS_INFO_STREAM("Created Node node name : simple_roomba");
 }
 
 void RoombaMove::initScanSubscriber() {
+  // Initialize subscriber to lazer scan data
   scanSubscriber = n.subscribe("scan", 100, &RoombaMove::scanCallBack, this);
   ROS_INFO_STREAM("Created subscriber to scan topic");
 }
 
 void RoombaMove::initTwistpublisher() {
+  // Initialize publisher to twist message topic
   twistpublisher = n.advertise<geometry_msgs::Twist>(
       "/mobile_base/commands/velocity", 100);
   ROS_INFO_STREAM("Created publisher");
@@ -64,33 +69,41 @@ void RoombaMove::initTwistpublisher() {
 void RoombaMove::scanCallBack(
     const sensor_msgs::LaserScan::ConstPtr &scanData) {
   obstacle = false;
+  // Initialize the nearest obstacle to first value
   minDist = *(scanData->ranges.begin());
+  // Loop through range values and find the nearest obstacle distance
   for (auto i : scanData->ranges) {
     if (i < minDist && !std::isnan(i)) {
+      // Assign minimum distance if the encountered value is less than the previous value
       minDist = i;
     }
   }
+  // Check for not a number which is when there is no object in range
   if (std::isnan(minDist)) {
     ROS_INFO_STREAM("No Obstacle in scan range");
   } else {
     ROS_INFO_STREAM("Min Distance : " << minDist);
   }
-
+  // Check if the object is inside collosion range
   if (minDist < scanData->range_min + 0.5 && !std::isnan(minDist)) {
     obstacle = true;
     ROS_WARN_STREAM("Obstacle Detected");
   }
+  // Move the robot
   botMove(obstacle);
 }
 
 void RoombaMove::botMove(bool obstacle) {
   if (obstacle) {
+    // When there is obstacle change the angle
     twist.linear.x = 0.0;
     twist.angular.z = 1.0;
   } else {
+    // When there is obstacle go forward
     twist.linear.x = 0.5;
     twist.angular.z = 0.0;
   }
+  // Publish the messages
   twistpublisher.publish(twist);
 }
 

@@ -45,11 +45,15 @@
  * @return Status of execution
  */
 int main(int argc, char **argv) {
+  // Initializing ROS node
   ros::init(argc, argv, "simple_roomba");
+  // Creating class object
   RoombaMove roomba;
-  roomba.nodeinit(argc, argv);
+  // Initializing subscriber to scan topic
   roomba.initScanSubscriber();
+  // Initializing publisher to twist topic
   roomba.initTwistpublisher();
+  // Let ROS take control
   ros::spin();
   return 0;
 
