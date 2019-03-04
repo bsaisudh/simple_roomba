@@ -32,6 +32,7 @@
 
 #include <sstream>
 #include <string>
+#include <iostream>
 
 #include "ros/ros.h"
 #include "geometry_msgs/Twist.h"
@@ -49,11 +50,29 @@ int main(int argc, char **argv) {
   ros::init(argc, argv, "simple_roomba");
   // Creating class object
   RoombaMove roomba;
-  // Initializing subscriber to scan topic
-  roomba.initScanSubscriber();
   // Initializing publisher to twist topic
   roomba.initTwistpublisher();
   // Let ROS take control
-  ros::spin();
+  char choice;
+  std::cout << "Autonomous Wandering ? [Y/N]";
+  std::cin >> choice;
+  if (choice == 'Y' || choice == 'y'){
+    // Initializing subscriber to scan topic
+    roomba.initScanSubscriber();
+    ros::spin();
+  } else {
+    int direction;
+    std::cout << "\n Enter 0 to move straight \n Enter 1 to turn\n";
+    while(1){
+      std::cin >> direction;
+      if (direction == 0){
+        roomba.botMove(direction);
+      } else if (direction == 1){
+        roomba.botMove(direction);
+      } else {
+        break;
+      }
+    }
+  }
   return 0;
 }
